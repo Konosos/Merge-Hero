@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class CharacterInformation : MonoBehaviour
 {
-    [SerializeField]protected int healthPoint;
-    [SerializeField]protected int atk;
-    [SerializeField]protected int xBoard;
-    [SerializeField]protected int yBoard;
-    [SerializeField]protected int id;
+    public int healthPoint;
+    public int atk;
+
+    [SerializeField]
+    protected HealthBar healthBar;
+    public int xBoard;
+    public int yBoard;
+    public int id;
 
     public bool isDeath=false;
 
@@ -17,9 +20,7 @@ public class CharacterInformation : MonoBehaviour
         if(isDeath)
             return;
         healthPoint -=dame;
-        //healthBar.SetHealth(healthPoint);
-        //Instantiate(bloodVFX,deathVFXSpawnPos.position,Quaternion.identity);
-        //SpawnDame(dame);
+        healthBar.SetHealth(healthPoint);
         if(healthPoint<=0)
         {
             isDeath=true;
@@ -34,6 +35,26 @@ public class CharacterInformation : MonoBehaviour
     }
     protected virtual void Die()
     {
-
+        Destroy(this.gameObject);
     }
+    public virtual void SetInfor(int _id)
+    {
+        id = _id;
+        SetPosition(xBoard, yBoard);
+        if(this.gameObject.tag=="Player")
+        {
+            healthBar.SetColor(false);
+        }
+        if (this.gameObject.tag == "Enemy")
+        {
+            healthBar.SetColor(true);
+        }
+    }
+    public virtual void SetPosition(int _xBoard, int _yBoard)
+    {
+        xBoard = _xBoard;
+        yBoard = _yBoard;
+        transform.position = new Vector3(-8 + 4 * xBoard, 1.5f, -12 + 4 * yBoard);
+    }
+    
 }

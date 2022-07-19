@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WarriorInformation : CharacterInformation, ICharacterInformation
+public class WarriorInformation : CharacterInformation
 {
     
     // Start is called before the first frame update
     void Start()
     {
-        SetInfor(1);
+        //SetInfor(1);
+        healthBar.SetMaxHealth(healthPoint);
     }
 
     // Update is called once per frame
@@ -16,11 +17,10 @@ public class WarriorInformation : CharacterInformation, ICharacterInformation
     {
         
     }
-    public void SetInfor(int _id)
+    public override void SetInfor(int _id)
     {
-        id=_id;
-        healthPoint=20*id;
+        base.SetInfor(_id);
+        healthPoint=200*id;
         atk=10*id;
-
     }
 }
