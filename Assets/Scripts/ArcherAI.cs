@@ -11,6 +11,10 @@ public class ArcherAI : MonoBehaviour
     public LayerMask targetMask;
     public bool attacking = false;
     [SerializeField] private float attackTime = 0.3f;
+    [SerializeField]
+    private GameObject bullet;
+    [SerializeField]
+    private Transform attackPoint;
     // Start is called before the first frame update
     void Start()
     {
@@ -82,7 +86,13 @@ public class ArcherAI : MonoBehaviour
     {
         if (targetObj == null)
             return;
-        CharacterInformation charInfor = targetObj.GetComponent<CharacterInformation>();
-        charInfor.TakeDamege(charController.characterInformation.atk);
+        Vector3 direct = (targetObj.transform.position - attackPoint.position).normalized;
+        GameObject bulletClone = Instantiate(bullet, attackPoint.position, Quaternion.identity);
+        Bullet bulletScr =bulletClone .GetComponent<Bullet>();
+        bulletScr.dir = direct;
+        bulletScr.dame = charController.characterInformation.atk;
+        bulletClone.tag = this.gameObject.tag;
+        /*CharacterInformation charInfor = targetObj.GetComponent<CharacterInformation>();
+        charInfor.TakeDamege(charController.characterInformation.atk);*/
     }
 }

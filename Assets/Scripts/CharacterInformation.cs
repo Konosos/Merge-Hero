@@ -9,11 +9,17 @@ public class CharacterInformation : MonoBehaviour
 
     [SerializeField]
     protected HealthBar healthBar;
+    [SerializeReference] protected Transform modelParent;
     public int xBoard;
     public int yBoard;
     public int id;
 
     public bool isDeath=false;
+
+    protected virtual void Start()
+    {
+        healthBar.SetMaxHealth(healthPoint);
+    }
 
     public virtual void TakeDamege(int dame)
     {
@@ -39,7 +45,7 @@ public class CharacterInformation : MonoBehaviour
     }
     public virtual void SetInfor(int _id)
     {
-        id = _id;
+        id = _id; 
         SetPosition(xBoard, yBoard);
         if(this.gameObject.tag=="Player")
         {
@@ -48,7 +54,21 @@ public class CharacterInformation : MonoBehaviour
         if (this.gameObject.tag == "Enemy")
         {
             healthBar.SetColor(true);
+            this.gameObject.transform.eulerAngles = new Vector3(0, 180, 0);
         }
+        
+    }
+    public virtual GameObject  SetModel(GameObject _model)
+    {
+        foreach (Transform child in modelParent)
+        {
+            Destroy(child.gameObject);
+        }
+        GameObject curModel = Instantiate(_model as GameObject);
+        curModel.transform.SetParent(modelParent);
+        curModel.transform.localPosition = new Vector3(1, 1, 1);
+        curModel.transform.position = transform.position;
+        return curModel;
     }
     public virtual void SetPosition(int _xBoard, int _yBoard)
     {

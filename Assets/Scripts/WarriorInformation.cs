@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class WarriorInformation : CharacterInformation
 {
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        //SetInfor(1);
-        healthBar.SetMaxHealth(healthPoint);
-    }
 
     // Update is called once per frame
     void Update()
@@ -20,7 +13,9 @@ public class WarriorInformation : CharacterInformation
     public override void SetInfor(int _id)
     {
         base.SetInfor(_id);
-        healthPoint=200*id;
-        atk=10*id;
+        healthPoint=(int)(200* Mathf.Pow(2.3f, id - 1));
+        atk=(int)(10* Mathf.Pow(2.3f, id - 1));
+        healthBar.SetMaxHealth(healthPoint);
+        SetModel(ModelManager.instance.warriorModels[id - 1]);
     }
 }

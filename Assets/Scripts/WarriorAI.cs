@@ -106,4 +106,16 @@ public class WarriorAI : MonoBehaviour
         CharacterInformation charInfor=targetObj.GetComponent<CharacterInformation>();
         charInfor.TakeDamege(charController.characterInformation.atk);
     }
+    private void OnEnable()
+    {
+        EvenManager.OnClicked += TurnOnNav;
+    }
+    private void OnDisable ()
+    {
+        EvenManager.OnClicked -= TurnOnNav;
+    }
+    private void TurnOnNav()
+    {
+        nav.enabled = true;
+    }
 }
