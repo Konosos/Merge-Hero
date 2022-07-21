@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4cfdfd933d22224893096597e0a769f, type: 3}
-  m_Name: CurGameData
+  m_Script: {fileID: 11500000, guid: 938641fc76fa9dc489baf6d862878476, type: 3}
+  m_Name: NewChapter
   m_EditorClassIdentifier: 
-  curChapter: 0
-  money: 900
-  priceWarrior: 200
-  priceArcher: 200
+  heroDatas: []

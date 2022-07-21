@@ -840,9 +840,9 @@ MonoBehaviour:
   curYBoard: 0
   isStarted: 0
   herosInChapters:
-  - {fileID: 11400000, guid: 469fb87439dc0f7479737e22f8f6442b, type: 2}
-  - {fileID: 11400000, guid: db3985a27fbe03e44ad502d6553438dc, type: 2}
-  - {fileID: 11400000, guid: dcfe6e88021585a4eb1731e12d41586d, type: 2}
+  - {fileID: 11400000, guid: 11e6e906a22e2604e9e7c30a542b55ff, type: 2}
+  - {fileID: 11400000, guid: a4cbaf20f26ccb94d8e355f5ad3ccdce, type: 2}
+  - {fileID: 11400000, guid: eef7715731825a345a5959e93204129f, type: 2}
   myHeros: {fileID: 11400000, guid: 02b27927cd1161a4bbf38122ac441e05, type: 2}
   curGameData: {fileID: 11400000, guid: ca18267160dd19f47adf7ee491d3c6f5, type: 2}
 --- !u!4 &463537040
