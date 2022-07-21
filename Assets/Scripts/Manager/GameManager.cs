@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,9 @@ public class GameManager : MonoBehaviour
 
     public bool isStarted = false;
     public List<HerosInChapter> herosInChapters;
-    public int curChapter = 0;
+    public HerosInChapter myHeros;
+    public GameData curGameData;
+    
     public static GameManager instance;
 
     private void Awake()
@@ -30,14 +33,21 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CreateHero(true,true, 1, 0, 2);
-        CreateHero(true, true, 1, 1, 2);
-        CreateHero(true, false, 1, 3, 0);
+        UIManager.instance.ShowMoney(curGameData.money);
+        UIManager.instance.ShowArcherPrice(curGameData.priceArcher);
+        UIManager.instance.ShowWarriorPrice(curGameData.priceWarrior);
+        //CreateHero(true,true, 1, 0, 2);
+        //CreateHero(true, true, 1, 1, 2);
+        //CreateHero(true, false, 1, 3, 0);
         //CreateHero(true, false, 2, 4, 0);
         //CreateHero(false, true, 1, 0, 4);
         //CreateHero(false, true, 1, 1, 4);
         //CreateHero(false, false, 1, 0, 6);
-        foreach(HeroData data in herosInChapters[curChapter].heroDatas)
+        foreach (HeroData data in myHeros.heroDatas)
+        {
+            CreateHero(data.isPlayer, data.isWarrior, data.id, data.xBoard, data.yBoard);
+        }
+        foreach (HeroData data in herosInChapters[curGameData.curChapter].heroDatas)
         {
             CreateHero(data.isPlayer, data.isWarrior, data.id, data.xBoard, data.yBoard);
         }
@@ -47,7 +57,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (isStarted)
+        {
+
             return;
+        }
+            
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -126,6 +140,7 @@ public class GameManager : MonoBehaviour
             }
             chooseHero = null;
         }
+       
     }
     void CreateHero(bool isPlayer,bool isWarrior, int _id, int _xBoard, int _yBoard)
     {
@@ -162,39 +177,118 @@ public class GameManager : MonoBehaviour
     {
         heros[_xBoard, _yBoard] = null;
     }
+    public void CheckMatch()
+    {
+        if(heros.Length<=0)
+        {
+            Debug.Log("WTF");
+            return;
+        }
+        bool playerLose = true;
+        bool enemyLose = true;
+        foreach(GameObject hero in heros )
+        {
+            if (hero == null)
+                continue;
+            if(hero.tag=="Player")
+            {
+                playerLose = false;
+            }
+            else
+            {
+                enemyLose = false;
+            }
+        }
+        if(playerLose)
+        {
+            Lose();
+        }
+        if(enemyLose)
+        {
+            Win();
+        }
+    }
+    public void DelayCheck()
+    {
+        Invoke("CheckMatch", 1f);
+    }
+    private void Win()
+    {
+        curGameData.curChapter++;
+        UIManager.instance.ShowEndMatchPan("You Win");
+        Time.timeScale = 0f;
+    }
+    private void Lose()
+    {
+        UIManager.instance.ShowEndMatchPan("You Lose");
+        Time.timeScale = 0f;
+    }
     public void StartBut()
     {
+        SaveMyHerosData();
         isStarted = true;
+        UIManager.instance.IsShowButPan(false);
         
     }
-    public void SellWarriorBut()
+
+    private void SaveMyHerosData()
     {
-        for(int j=2;j>=0;j--)
+        myHeros.heroDatas = new List<HeroData>();
+        for(int j=0;j<3;j++)
         {
             for(int i=0;i<5;i++)
             {
-                if(heros[i,j]==null)
+                if (heros[i, j] == null)
+                    continue;
+                if (heros[i, j].tag != "Player")
+                    continue;
+                CharacterInformation charInfor = heros[i, j].GetComponent<CharacterInformation>();
+                bool _isWarrior = heros[i, j].layer == 8;
+                myHeros.heroDatas.Add(new HeroData {isPlayer=true, isWarrior=_isWarrior, id=charInfor.id, xBoard=charInfor.xBoard, yBoard=charInfor.yBoard });
+            }
+        }
+    }
+
+    public void SellWarriorBut()
+    {
+        if (curGameData.money < curGameData.priceWarrior)
+            return;
+        for (int j = 2; j >= 0; j--)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (heros[i, j] == null)
                 {
                     CreateHero(true, true, 1, i, j);
+                    curGameData.money -= curGameData.priceWarrior;
+                    curGameData.priceWarrior += 200;
+                    UIManager.instance.ShowMoney(curGameData.money);
+                    UIManager.instance.ShowWarriorPrice(curGameData.priceWarrior);
                     goto go;
                 }
             }
         }
-        go:;
+    go:;
     }
     public void SellArcherBut()
     {
+        if (curGameData.money < curGameData.priceArcher)
+            return;
         for (int j = 0; j <= 2; j++)
         {
-            for (int i = 4; i >=0; i--)
+            for (int i = 4; i >= 0; i--)
             {
                 if (heros[i, j] == null)
                 {
                     CreateHero(true, false, 1, i, j);
+                    curGameData.money -= curGameData.priceArcher;
+                    curGameData.priceArcher += 200;
+                    UIManager.instance.ShowMoney(curGameData.money);
+                    UIManager.instance.ShowArcherPrice(curGameData.priceArcher);
                     goto go;
                 }
             }
         }
-        go:;
+    go:;
     }
 }

@@ -32,15 +32,11 @@ public class CharacterInformation : MonoBehaviour
             isDeath=true;
             Die();
         }
-        else
-        {
-            //isHurting=true;
-            //cur_TimeHurt=0f;
-            //isHurt=true;
-        }
+
     }
     protected virtual void Die()
     {
+        GameManager.instance.DelayCheck();
         Destroy(this.gameObject);
     }
     public virtual void SetInfor(int _id)

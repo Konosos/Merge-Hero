@@ -18,4 +18,5 @@ public class WarriorInformation : CharacterInformation
         healthBar.SetMaxHealth(healthPoint);
         SetModel(ModelManager.instance.warriorModels[id - 1]);
     }
+    
 }
