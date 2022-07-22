@@ -14,8 +14,8 @@ public class ArcherInformation : CharacterInformation
     public override void SetInfor(int _id)
     {
         base.SetInfor(_id);
-        healthPoint = (int)(150 * Mathf.Pow(2.3f,id-1));
-        atk =(int)( 15 * Mathf.Pow(2.3f, id - 1));
+        healthPoint = (int)(30 * Mathf.Pow(2.3f,id-1));
+        atk =(int)( 5 * Mathf.Pow(2.3f, id - 1));
         healthBar.SetMaxHealth(healthPoint);
         SetModel(ModelManager.instance.archerModels[id - 1]);
     }

@@ -9,17 +9,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[,] heros = new GameObject[5, 7];
     [SerializeField] private GameObject warrior;
     [SerializeField] private GameObject archer;
+
     [SerializeField] private GameObject chooseHero;
 
     [SerializeField]
     private GameObject meshCell;
     [SerializeField] private LayerMask character;
-    [SerializeField]
+
     private int curXBoard;
-    [SerializeField]
     private int curYBoard;
 
     public bool isStarted = false;
+    private bool delayCheckMatch = false;
+
+    private Touch initialTouch = new Touch();
+    private bool hasSwiped = false;
+
     public List<HerosInChapter> herosInChapters;
     public HerosInChapter myHeros;
     public GameData curGameData;
@@ -58,89 +63,101 @@ public class GameManager : MonoBehaviour
     {
         if (isStarted)
         {
-
+            if(!delayCheckMatch)
+            {
+                StartCoroutine(CheckMatchCoroutine());
+            }
             return;
         }
-            
-        if (Input.GetMouseButtonDown(0))
+        
+        if (Input.touchCount > 0)
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (!Physics.Raycast(ray, out hit, Mathf.Infinity, character))
-                return;
-            for (int i = 0; i < 7; i++)
+            foreach (Touch t in Input.touches)
             {
-                for (int j = 0; j < 5; j++)
+                if (t.phase == TouchPhase.Began)
                 {
-                    Vector3 boardPos = new Vector3(-8f + 4 * j, 0, -12f + 4 * i);
-                    Vector3 dir = hit.point - boardPos;
-                    if (dir.magnitude > 2f)
-                        continue;
-                    if (heros[j, i] != null)
+                    initialTouch = t;
+                    Ray ray = cam.ScreenPointToRay(initialTouch.position);
+                    RaycastHit hit;
+                    if (!Physics.Raycast(ray, out hit, Mathf.Infinity, character))
+                        return;
+                    for (int i = 0; i < 7; i++)
                     {
-                        chooseHero = heros[j, i];
-                        chooseHero.GetComponent<CapsuleCollider>().isTrigger = true;
+                        for (int j = 0; j < 5; j++)
+                        {
+                            Vector3 boardPos = new Vector3(-8f + 4 * j, 0, -12f + 4 * i);
+                            Vector3 dir = hit.point - boardPos;
+                            if (dir.magnitude > 2f)
+                                continue;
+                            if (heros[j, i] != null)
+                            {
+                                chooseHero = heros[j, i];
+                                chooseHero.GetComponent<CapsuleCollider>().isTrigger = true;
+                            }
+                        }
                     }
                 }
-            }
-        }
-        if (chooseHero == null)
-            return;
-        if (Input.GetMouseButton(0))
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (!Physics.Raycast(ray, out hit, Mathf.Infinity, character))
-                return;           
-            chooseHero.transform.position = hit.point + Vector3.up;
-            for (int i = 0; i < 7; i++)
-            {
-                for (int j = 0; j < 5; j++)
+                if (chooseHero == null)
+                    return;
+                if (t.phase != TouchPhase.Ended && !hasSwiped)
                 {
-                    Vector3 boardPos = new Vector3(-8f + 4 * j, 0, -12f + 4 * i);
-                    Vector3 dir = hit.point - boardPos;
-                    if (dir.magnitude > 2f)
-                        continue;
-                    curXBoard = j;
-                    curYBoard = i;
-                    meshCell.transform.position = new Vector3(-8f + 4 * curXBoard, 0.52f, -12f + 4 * curYBoard);
-                }
-            }
 
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            meshCell.transform.position = new Vector3(0, -1f, 0);
-            chooseHero.GetComponent<CapsuleCollider>().isTrigger = false;
-            CharacterInformation charInfor = chooseHero.GetComponent<CharacterInformation>();
-            if (heros[curXBoard, curYBoard] == null)
-            {
-                SetPosEmty(charInfor.xBoard, charInfor.yBoard);
-                charInfor.SetPosition(curXBoard, curYBoard);
-                SetHeroArray(chooseHero);
-            }
-            else
-            {
-                GameObject curHero = heros[curXBoard, curYBoard];
-                CharacterInformation curHeroInfor = curHero.GetComponent<CharacterInformation>();
-                if (curHero.layer==chooseHero.layer && curHero.tag==chooseHero.tag && curHeroInfor.id==charInfor.id && curHero!=chooseHero)
-                {
-                    curHeroInfor.id += 1;
-                    curHeroInfor.SetInfor(curHeroInfor.id);
-                    SetPosEmty(charInfor.xBoard, charInfor.yBoard);
-                    Destroy(chooseHero);
+                    Ray ray = cam.ScreenPointToRay(t.position);
+                    RaycastHit hit;
+                    if (!Physics.Raycast(ray, out hit, Mathf.Infinity, character))
+                        return;
+                    chooseHero.transform.position = hit.point + Vector3.up;
+                    for (int i = 0; i < 7; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            Vector3 boardPos = new Vector3(-8f + 4 * j, 0, -12f + 4 * i);
+                            Vector3 dir = hit.point - boardPos;
+                            if (dir.magnitude > 2f)
+                                continue;
+                            curXBoard = j;
+                            curYBoard = i;
+                            meshCell.transform.position = new Vector3(-8f + 4 * curXBoard, 0.52f, -12f + 4 * curYBoard);
+                        }
+                    }
                 }
-                else
+                if (t.phase == TouchPhase.Ended)
                 {
-                    curHeroInfor.SetPosition(charInfor.xBoard, charInfor.yBoard);
-                    charInfor.SetPosition(curXBoard, curYBoard);
-                    SetHeroArray(chooseHero);
-                    SetHeroArray(curHero);
-                }              
+                    meshCell.transform.position = new Vector3(0, -1f, 0);
+                    chooseHero.GetComponent<CapsuleCollider>().isTrigger = false;
+                    CharacterInformation charInfor = chooseHero.GetComponent<CharacterInformation>();
+                    if (heros[curXBoard, curYBoard] == null)
+                    {
+                        SetPosEmty(charInfor.xBoard, charInfor.yBoard);
+                        charInfor.SetPosition(curXBoard, curYBoard);
+                        SetHeroArray(chooseHero);
+                    }
+                    else
+                    {
+                        GameObject curHero = heros[curXBoard, curYBoard];
+                        CharacterInformation curHeroInfor = curHero.GetComponent<CharacterInformation>();
+                        if (curHero.layer == chooseHero.layer && curHero.tag == chooseHero.tag && curHeroInfor.id == charInfor.id && curHero != chooseHero)
+                        {
+                            curHeroInfor.id += 1;
+                            curHeroInfor.SetInfor(curHeroInfor.id);
+                            SetPosEmty(charInfor.xBoard, charInfor.yBoard);
+                            Destroy(chooseHero);
+                        }
+                        else
+                        {
+                            curHeroInfor.SetPosition(charInfor.xBoard, charInfor.yBoard);
+                            charInfor.SetPosition(curXBoard, curYBoard);
+                            SetHeroArray(chooseHero);
+                            SetHeroArray(curHero);
+                        }
+                    }
+                    chooseHero = null;
+                    initialTouch = new Touch();
+                    hasSwiped = false;
+                }
             }
-            chooseHero = null;
+            
         }
-       
     }
     void CreateHero(bool isPlayer,bool isWarrior, int _id, int _xBoard, int _yBoard)
     {
@@ -177,7 +194,14 @@ public class GameManager : MonoBehaviour
     {
         heros[_xBoard, _yBoard] = null;
     }
-    public void CheckMatch()
+    private IEnumerator CheckMatchCoroutine()
+    {
+        delayCheckMatch = true;
+        yield return new WaitForSeconds(1f);
+        CheckMatch();
+        delayCheckMatch = false;
+    }
+    private  void CheckMatch()
     {
         if(heros.Length<=0)
         {
@@ -199,18 +223,16 @@ public class GameManager : MonoBehaviour
                 enemyLose = false;
             }
         }
-        if(playerLose)
-        {
-            Lose();
-        }
+        
         if(enemyLose)
         {
             Win();
+            return;
         }
-    }
-    public void DelayCheck()
-    {
-        Invoke("CheckMatch", 1f);
+        if (playerLose)
+        {
+            Lose();
+        }
     }
     private void Win()
     {

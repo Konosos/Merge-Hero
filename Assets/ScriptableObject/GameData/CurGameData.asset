@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4cfdfd933d22224893096597e0a769f, type: 3}
   m_Name: CurGameData
   m_EditorClassIdentifier: 
-  curChapter: 0
+  curChapter: 1
   money: 900
   priceWarrior: 200
   priceArcher: 200

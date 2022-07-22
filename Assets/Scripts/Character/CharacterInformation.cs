@@ -36,7 +36,6 @@ public class CharacterInformation : MonoBehaviour
     }
     protected virtual void Die()
     {
-        GameManager.instance.DelayCheck();
         Destroy(this.gameObject);
     }
     public virtual void SetInfor(int _id)

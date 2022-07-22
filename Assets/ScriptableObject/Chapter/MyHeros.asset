@@ -16,16 +16,11 @@ MonoBehaviour:
   - isPlayer: 1
     isWarrior: 0
     id: 1
-    xBoard: 3
-    yBoard: 0
-  - isPlayer: 1
-    isWarrior: 0
-    id: 1
-    xBoard: 4
+    xBoard: 0
     yBoard: 0
   - isPlayer: 1
     isWarrior: 1
-    id: 1
+    id: 2
     xBoard: 1
     yBoard: 2
   - isPlayer: 1

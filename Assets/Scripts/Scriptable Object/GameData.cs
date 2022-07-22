@@ -8,4 +8,5 @@ public class GameData : ScriptableObject
     public int money;
     public int priceWarrior;
     public int priceArcher;
+    public ulong idleTimeStart;
 }
