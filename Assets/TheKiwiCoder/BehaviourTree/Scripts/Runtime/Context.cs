@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace TheKiwiCoder {
-
+    
     // The context is a shared object every node has access to.
     // Commonly used components and subsytems should be stored here
     // It will be somewhat specfic to your game exactly what to add here.
@@ -19,7 +19,9 @@ namespace TheKiwiCoder {
         public BoxCollider boxCollider;
         public CapsuleCollider capsuleCollider;
         public CharacterController characterController;
+        
         // Add other game specific systems here
+        public CharController charController;
 
         public static Context CreateFromGameObject(GameObject gameObject) {
             // Fetch all commonly used components
@@ -33,9 +35,9 @@ namespace TheKiwiCoder {
             context.boxCollider = gameObject.GetComponent<BoxCollider>();
             context.capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
             context.characterController = gameObject.GetComponent<CharacterController>();
-            
-            // Add whatever else you need here...
 
+            // Add whatever else you need here...
+            context.charController = gameObject.GetComponent<CharController>();
             return context;
         }
     }
