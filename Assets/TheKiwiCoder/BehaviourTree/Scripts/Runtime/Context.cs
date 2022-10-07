@@ -22,6 +22,7 @@ namespace TheKiwiCoder {
         
         // Add other game specific systems here
         public CharController charController;
+        
 
         public static Context CreateFromGameObject(GameObject gameObject) {
             // Fetch all commonly used components

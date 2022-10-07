@@ -18,6 +18,7 @@ MonoBehaviour:
   position: {x: -23, y: -118}
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
+    enemyObj: {fileID: 0}
   description: 
   drawGizmos: 0
   child: {fileID: 5604316693973195045}
@@ -38,12 +39,14 @@ MonoBehaviour:
   state: 0
   started: 0
   guid: c632f3c17197577469f581d2f3cbc197
-  position: {x: 0, y: 0}
+  position: {x: -23, y: 117.15997}
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
+    enemyObj: {fileID: 0}
   description: 
   drawGizmos: 0
-  children: []
+  children:
+  - {fileID: 3536329975838908128}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,8 +66,31 @@ MonoBehaviour:
   - {fileID: -6484909860489218630}
   - {fileID: 5604316693973195045}
   - {fileID: -4849204969119463870}
+  - {fileID: 3536329975838908128}
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
+    enemyObj: {fileID: 0}
+--- !u!114 &3536329975838908128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d325eb98523ed1f4db24ddf2b97465a2, type: 3}
+  m_Name: DetectEnemyNearest
+  m_EditorClassIdentifier: 
+  state: 0
+  started: 0
+  guid: e9e3c906ca559a24d91a09108888892b
+  position: {x: -179, y: 269}
+  blackboard:
+    moveToPosition: {x: 0, y: 0, z: 0}
+    enemyObj: {fileID: 0}
+  description: 
+  drawGizmos: 0
 --- !u!114 &5604316693973195045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,9 +109,10 @@ MonoBehaviour:
   position: {x: -22.999985, y: 2.007946}
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
+    enemyObj: {fileID: 0}
   description: 
   drawGizmos: 0
-  child: {fileID: 0}
+  child: {fileID: -4849204969119463870}
 --- !u!114 &6757583070823890782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,6 +131,7 @@ MonoBehaviour:
   position: {x: -23, y: -222.76}
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
+    enemyObj: {fileID: 0}
   description: 
   drawGizmos: 0
   child: {fileID: -6484909860489218630}
